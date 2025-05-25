@@ -46,10 +46,3 @@ A lightweight backend API built using **FastAPI + Python**, designed for doctors
   Remove individual patient entries when no longer needed.
 
 ---
-
-## 🚀 Getting Started
-
-1. **Clone the repo:**
-   ```bash
-   git clone https://github.com/your-username/FAST_API_for_Machine_Learning.git
-   cd FAST_API_for_Machine_Learning
