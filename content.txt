@@ -1,0 +1,30 @@
+🌀 Understanding `async` and `await` in Python
+
+`async` and `await` are Python keywords used to **write asynchronous code** — code that can handle
+ multiple operations **without waiting** for each to complete before starting the next.
+
+---
+
+
+### 🔁 Why Use Async?
+
+In traditional (synchronous) code, Python **waits** for each line to finish before moving on.  
+This is inefficient for I/O-bound tasks like:
+- Reading from files
+- Calling APIs
+- Accessing databases
+
+
+✅ With `async`/`await`, Python can **pause** waiting tasks and do something else in the meantime — 
+improving speed and scalability.
+
+
+
+---
+### 🧠 Basic Concepts
+
+- `async def`: Defines an **asynchronous function**
+- `await`: Pauses execution until the awaited task completes
+- `asyncio`: The built-in Python library for running asynchronous tasks
+
+---
