@@ -12,11 +12,25 @@ class UserSignup(BaseModel):
     confirm_password : str
 
     @field_validator("name")
+    @classmethod
     def name_must_be_alpha(cls,v):
         if not v.replace(" ", "").isalpha():
             raise ValueError ("Name must contain only alphabets and spaces")
-        return v.title()
+        return v.title().upper()
+    
+    @field_validator("email")
+    @classmethod
+    def email_validator(cls,v):
+        ## class and Value (which user inputs)
+        valid_domains = ["hdfc.com", "icici.com"]
+        domain_name = v.split("@")[-1]
+        if domain_name not in valid_domains:
+             raise ValueError("not a valid domain")
+        else:
+             return v
+
     @field_validator('age')
+    @classmethod
     def age_must_be_18_or_more(cls, v):
         if v < 18:
             raise ValueError("You must be at least 18 years old to register")
