@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Path, Query
 import json
 from pydantic import BaseModel, Field, computed_field
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
@@ -33,6 +33,14 @@ class Patient(BaseModel):
             return "normal"
         else:
             return "obese"
+
+class PatientUpdate(BaseModel):
+    name: Annotated[Optional[str], Field(default=None, description="Name of the patient")]
+    city: Annotated[Optional[str], Field(default=None)]
+    age: Annotated[Optional[int], Field(default=None, gt=0, lt=120, description="Age of the patient")]
+    gender: Annotated[Optional[Literal['male', 'female', 'others']], Field(default=None, description="Gender of the patient")]
+    weight: Annotated[Optional[float], Field(default=None, gt=0, description="Weight of the patient in kgs")]
+    height: Annotated[Optional[float], Field(default=None, gt=0, lt=150, description="Height of the patient in mts")]
 
 
 def load_data():
@@ -101,5 +109,33 @@ def create_patient(patient: Patient):
 
     return JSONResponse(status_code=201, content={'message':"Patient created successfully"})
 
+@app.put("/edit/{patient_id}")
+
+def update_patient(patient_id : str, patient_update: PatientUpdate):
+     #load existing data
+    data = load_data()
+    # check if the patient duplicate 
+    if patient_id not in data:
+        raise HTTPException(status_code=404, detail= "patient not found")
+    
+    existing_patient_info = data['patient_id']
+   
+    updated_patient_info = patient_update.model_dump(exclude_unset= True)
+
+    for key, value in updated_patient_info.items():
+        existing_patient_info[key] = value
+
+
+    existing_patient_info['id'] = patient_id
+    ## create a patient pydantic object
+    patient_pydantic_object = Patient(**existing_patient_info)
+
+    #pydantic object --> dict
+    patient_pydantic_object.model_dump(exclude= 'id')
+
+    data[patient_id] = existing_patient_info
+
+    ## save data
+    save_data(data)
 
 
